@@ -1,112 +1,101 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>Planeta Con Controles Orbitales</title>
+		<title>La Luna</title>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
 		<link type="text/css" rel="stylesheet" href="css/main.css">
 	</head>
 	<body>
-
 		<script type="module">
 
 			import * as THREE from './js/three.module.js';
 
-			import { GUI } from './js/dat.gui.module.js';
 			import { OrbitControls } from './js/OrbitControls.js';
-			// import { CSS3DRenderer, CSS3DObject } from './js/CSS3DRenderer.js';
 
-			let camera, scene, renderer, loader, gui;
+			let camera, scene, renderer;
 
-			let spotLight, spotLightHelper, shadowCameraHelper
+			let directLight, directLightHelper, shadowCameraHelper;
+
+			init();
+			render();
 
 			function init() {
-				
-				// loader = new THREE.TextureLoader();
-				// loader.load('./imagenes/stars.jpg', function (texture) {
-				// 	scene.background = texture;
-				// });
 
+				// Renderer
 				renderer = new THREE.WebGLRenderer( { antialias: true } );
-				renderer.setPixelRatio( window.devicePixelRatio );
 				renderer.setSize( window.innerWidth, window.innerHeight );
 				document.body.appendChild( renderer.domElement );
 
-				renderer.shadowMap.enabled = true;
-
-				renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-				renderer.outputEncoding = THREE.sRGBEncoding;
-
+				// Escena
 				scene = new THREE.Scene();
 
-				camera = new THREE.PerspectiveCamera( 35, window.innerWidth / window.innerHeight, 1, 1000 );
-				camera.position.set( 160, 40, 10 );
+				// Camara
+				camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 1, 10000 );
+				camera.position.set( 20, 8, 8 );
 
 				// Controles
-
 				let controls = new OrbitControls( camera, renderer.domElement );
-				controls.addEventListener( 'change', render );
-				controls.minDistance = 20;
-				controls.maxDistance = 500;
-				controls.enablePan = false;
+				controls.minDistance = 15; // 15
+				controls.maxDistance = 30; //30
+
+				// Skybox		
+				let cubeGeometry = new THREE.CubeGeometry( 1000, 1000, 1000 );
+				let cubeMaterials = [
+					new THREE.MeshBasicMaterial( {map: new THREE.TextureLoader().load('./imagenes/Skybox/front.png'), side: THREE.DoubleSide} ),
+					new THREE.MeshBasicMaterial( {map: new THREE.TextureLoader().load('./imagenes/Skybox/back.png'), side: THREE.DoubleSide} ),
+					new THREE.MeshBasicMaterial( {map: new THREE.TextureLoader().load('./imagenes/Skybox/up.png'), side: THREE.DoubleSide} ),
+					new THREE.MeshBasicMaterial( {map: new THREE.TextureLoader().load('./imagenes/Skybox/down.png'), side: THREE.DoubleSide} ),
+					new THREE.MeshBasicMaterial( {map: new THREE.TextureLoader().load('./imagenes/Skybox/right.png'), side: THREE.DoubleSide} ),
+					new THREE.MeshBasicMaterial( {map: new THREE.TextureLoader().load('./imagenes/Skybox/left.png'), side: THREE.DoubleSide} )
+				];
+				let cubeMaterial = new THREE.MeshFaceMaterial( cubeMaterials );
 				
+				let skybox = new THREE.Mesh( cubeGeometry, cubeMaterial );
+				scene.add( skybox );
+
+				// La Luna
+
+				// var loader = new THREE.GLTFLoader();
+            	// loader.load( 'modelos/moon.glb', function ( gltf ) {
+            	// 	scene.add( gltf.scene );
+            	// 	arma = gltf.scene;
+            	// }, undefined, function ( error ) {
+
+            	// 	console.error( error );
+
+            	// } );
+
+				let moonMaterial = new THREE.MeshPhongMaterial( { map: new THREE.TextureLoader().load('./imagenes/Luna/2k_moon.jpg')} );
+				let moonGeometry = new THREE.SphereBufferGeometry( 5, 32, 32 );
+
+				let moon = new THREE.Mesh( moonGeometry, moonMaterial );
+				
+				moon.castShadow = false;
+				scene.add( moon );
+
 				// Luces
 
-				var ambient = new THREE.AmbientLight( 0xffffff, 0.1 );
-				scene.add( ambient );
-
-				spotLight = new THREE.SpotLight( 0xffffff, 2 );
-				spotLight.position.set( 15, 40, 35 );
-				spotLight.angle = Math.PI / 4;
-				spotLight.penumbra = 0.1;
-				spotLight.decay = 2;
-				spotLight.distance = 200;
-
-				spotLight.castShadow = true;
-				spotLight.shadow.mapSize.width = 512;
-				spotLight.shadow.mapSize.height = 512;
-				spotLight.shadow.camera.near = 20;
-				spotLight.shadow.camera.far = 500;
-				spotLight.shadow.focus = 1;
-				scene.add( spotLight );
-
-				// Manipulacion De Luz
-
-				// var material = new THREE.MeshPhongMaterial( { color: 0x808080, dithering: true } );
-
-				// var geometry = new THREE.PlaneBufferGeometry( 2000, 2000 );
-
-				// var plane = new THREE.Mesh( geometry, material );
-				// plane.position.set( 0, - 1, 0 );
-				// plane.rotation.x = - Math.PI * 0.5;
-				// plane.receiveShadow = true;
-				// scene.add( plane );
-
-				// Planeta
-
-				var material = new THREE.MeshPhongMaterial( { color: 0x4080ff, dithering: true } );
-
-				var geometry = new THREE.SphereBufferGeometry( 5, 32, 32 );
-
-				var sphere = new THREE.Mesh( geometry, material );
-				sphere.position.set( 0, 5, 0 );
-				sphere.castShadow = true;
-				scene.add( sphere );
+				directLight = new THREE.DirectionalLight( 0xFFFFFF, 1.5, 1000);
+				directLight.position.set( -15, 10, 0 ); // 15, 40, 35
+				camera.add( directLight );
+				scene.add( new THREE.AmbientLight( 0xFFFFFF, 0.08 ), camera);
 
 				// Helpers
 
-				shadowCameraHelper = new THREE.CameraHelper( spotLight.shadow.camera );
-				scene.add( shadowCameraHelper );
+				// shadowCameraHelper = new THREE.CameraHelper( directLight.shadow.camera );
+				// scene.add( shadowCameraHelper );
+				
+				// let newCamera = new THREE.PerspectiveCamera( 35, window.innerWidth / window.innerHeight, 1, 1000 );
+				// let cameraHelper = new THREE.CameraHelper(newCamera);
+				// scene.add( cameraHelper );
 
-				spotLightHelper = new THREE.SpotLightHelper( spotLight );
-				scene.add( spotLightHelper );
+				// directLightHelper = new THREE.DirectionalLightHelper( directLight );
+				// scene.add( directLightHelper );
 
 				//
 
-				render();
-
 				window.addEventListener( 'resize', onWindowResize, false );
-
 			}
 
 			function onWindowResize() {
@@ -120,89 +109,10 @@
 
 			function render() {
 
-				// spotLight.position.set(camera.position.x, camera.position.y, camera.position.z);
-				
-				spotLightHelper.update();
-
-				shadowCameraHelper.update();
-
 				renderer.render( scene, camera );
-
-				console.log(spotLight.position)
+				requestAnimationFrame(render);
+			
 			}
-
-			function buildGui() {
-
-				gui = new GUI();
-
-				var params = {
-					'light color': spotLight.color.getHex(),
-					intensity: spotLight.intensity,
-					distance: spotLight.distance,
-					angle: spotLight.angle,
-					penumbra: spotLight.penumbra,
-					decay: spotLight.decay,
-					focus: spotLight.shadow.focus
-				};
-
-				gui.addColor( params, 'light color' ).onChange( function ( val ) {
-
-					spotLight.color.setHex( val );
-					render();
-
-				} );
-
-				gui.add( params, 'intensity', 0, 2 ).onChange( function ( val ) {
-
-					spotLight.intensity = val;
-					render();
-
-				} );
-
-
-				gui.add( params, 'distance', 50, 200 ).onChange( function ( val ) {
-
-					spotLight.distance = val;
-					render();
-
-				} );
-
-				gui.add( params, 'angle', 0, Math.PI / 3 ).onChange( function ( val ) {
-
-					spotLight.angle = val;
-					render();
-
-				} );
-
-				gui.add( params, 'penumbra', 0, 1 ).onChange( function ( val ) {
-
-					spotLight.penumbra = val;
-					render();
-
-				} );
-
-				gui.add( params, 'decay', 1, 2 ).onChange( function ( val ) {
-
-					spotLight.decay = val;
-					render();
-
-				} );
-
-				gui.add( params, 'focus', 0, 1 ).onChange( function ( val ) {
-
-					spotLight.shadow.focus = val;
-					render();
-
-				} );
-
-				gui.open();
-
-			}
-
-			init();
-			buildGui();
-			render();
-
 
 		</script>
 	</body>
