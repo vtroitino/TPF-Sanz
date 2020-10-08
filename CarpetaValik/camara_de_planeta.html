@@ -12,10 +12,11 @@
 			import * as THREE from './js/three.module.js';
 
 			import { OrbitControls } from './js/OrbitControls.js';
+			import { GLTFLoader } from  './js/GLTFLoader.js';
 
 			let camera, scene, renderer;
 
-			let directLight, directLightHelper, shadowCameraHelper;
+			let directLight, directLightHelper, shadowCameraHelper, arma;
 
 			init();
 			render();
@@ -56,7 +57,7 @@
 
 				// La Luna
 
-				// var loader = new THREE.GLTFLoader();
+				// var loader = new GLTFLoader();
             	// loader.load( 'modelos/moon.glb', function ( gltf ) {
             	// 	scene.add( gltf.scene );
             	// 	arma = gltf.scene;
@@ -66,13 +67,13 @@
 
             	// } );
 
-				let moonMaterial = new THREE.MeshPhongMaterial( { map: new THREE.TextureLoader().load('./imagenes/Luna/2k_moon.jpg')} );
-				let moonGeometry = new THREE.SphereBufferGeometry( 5, 32, 32 );
+				// let moonMaterial = new THREE.MeshPhongMaterial( { map: new THREE.TextureLoader().load('./imagenes/Luna/2k_moon.jpg')} );
+				// let moonGeometry = new THREE.SphereBufferGeometry( 5, 32, 32 );
 
-				let moon = new THREE.Mesh( moonGeometry, moonMaterial );
+				// let moon = new THREE.Mesh( moonGeometry, moonMaterial );
 				
-				moon.castShadow = false;
-				scene.add( moon );
+				// moon.castShadow = false;
+				// scene.add( moon );
 
 				// Luces
 
@@ -90,8 +91,8 @@
 				// let cameraHelper = new THREE.CameraHelper(newCamera);
 				// scene.add( cameraHelper );
 
-				// directLightHelper = new THREE.DirectionalLightHelper( directLight );
-				// scene.add( directLightHelper );
+				directLightHelper = new THREE.DirectionalLightHelper( directLight );
+				scene.add( directLightHelper );
 
 				//
 
@@ -108,6 +109,8 @@
 			}
 
 			function render() {
+
+				directLightHelper.update();
 
 				renderer.render( scene, camera );
 				requestAnimationFrame(render);
