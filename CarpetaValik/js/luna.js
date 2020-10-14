@@ -3,17 +3,17 @@ import * as THREE from '../../node_modules/three/build/three.module.js';
 import { OrbitControls } from '../../node_modules/three/examples/jsm/controls/OrbitControls.js';
 import { GLTFLoader } from  '../../node_modules/three/examples/jsm/loaders/GLTFLoader.js';
 
+let screen = document.getElementById('canvas-luna');
 let camera, scene, renderer;
 
 let directLight, directLightHelper, shadowCameraHelper;
 
 init();
-render();
 
 function init() {
 
     // Renderer
-    renderer = new THREE.WebGLRenderer( { antialias: true } );
+    renderer = new THREE.WebGLRenderer( { canvas: screen, antialias: true } );
     renderer.setSize( window.innerWidth, window.innerHeight );
     document.body.appendChild( renderer.domElement );
 
@@ -46,17 +46,18 @@ function init() {
 
     // La Luna
     // let loader = new GLTFLoader();
-    // loader.load( './modelos/moon.glb', handle_load);
+    // loader.load( './modelos/luna/Moon_2K.gltf', handle_load);
 
     // let moon;
 
     // function handle_load(gltf) {
     //     moon = gltf.scene.children[0];
+    //     // moon.scale.set(10, 10, 10);
     //     scene.add(moon);
     // }
 
     let moonMaterial = new THREE.MeshPhongMaterial( { map: new THREE.TextureLoader().load('./imagenes/Luna/2k_moon.jpg')} );
-    let moonGeometry = new THREE.SphereBufferGeometry( 5, 32, 32 );
+    let moonGeometry = new THREE.DodecahedronBufferGeometry( 5, 5);
 
     let moon = new THREE.Mesh( moonGeometry, moonMaterial );
     
@@ -64,10 +65,10 @@ function init() {
     scene.add( moon );
 
     // Luces
-    directLight = new THREE.DirectionalLight( 0xFFFFFF, 1);
+    directLight = new THREE.DirectionalLight( 0xffffff, 1);
     directLight.position.set( -15, 10, 0 ); // 15, 40, 35
     camera.add( directLight );
-    scene.add( new THREE.AmbientLight( 0xFFFFFF, 0.1 ), camera);
+    scene.add( new THREE.AmbientLight( 0xffffff, 0.1 ), camera);
 
     // Helpers
 
@@ -84,6 +85,8 @@ function init() {
     //
 
     window.addEventListener( 'resize', onWindowResize, false );
+
+    render();
 }
 
 function onWindowResize() {

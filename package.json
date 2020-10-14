@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/vtroitino/TPF-Sanz#readme",
   "dependencies": {
+    "materialize-css": "^1.0.0-rc.2",
     "three": "^0.121.1"
   }
 }
