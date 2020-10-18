@@ -38,7 +38,7 @@ function init() {
     stars = new THREE.Points(starGeo, starMaterial);
     scene.add(stars);
 
-    window.addEventListener("resize", onWindowResize, false);
+    window.addEventListener('resize', onWindowResize, false);
     
     render();
 }
@@ -63,3 +63,24 @@ function render() {
     renderer.render(scene, camera);
     requestAnimationFrame(render);
 }
+
+//CSS
+
+//JS Alerta
+let close = document.getElementById('alert_close');
+let alert = document.getElementById('alert_box');
+
+close.addEventListener('click', () => alert.style.opacity = '0');
+alert.addEventListener('transitionend', () => alert.remove());
+
+//JS Mostrar/Esconder Contraseña
+let password = document.getElementById('myPassword')
+
+password.addEventListener('click', function () {
+    if (password.type === "password") {
+        password.type = "text";
+    } else {
+        password.type = "password";
+    }
+});
+
