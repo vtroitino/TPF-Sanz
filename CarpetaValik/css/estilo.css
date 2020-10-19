@@ -15,6 +15,9 @@ body {
 input {
 	color: white;
 }
+#alert_box {
+    transition: opacity 0.2s;
+}
 #canvas-login {
 	position: absolute;
 	top:0;
@@ -35,6 +38,14 @@ input {
 	height:100px;
 	border-radius: 50%;
 	margin:0 auto;
+}
+.material-icons{
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    font-size: 20px;
+    color: white;
+    cursor:pointer; 
 }
 
 /* .mySidebar {

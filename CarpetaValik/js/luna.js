@@ -57,7 +57,7 @@ function init() {
     // }
 
     let moonMaterial = new THREE.MeshPhongMaterial( { map: new THREE.TextureLoader().load('./imagenes/Luna/2k_moon.jpg')} );
-    let moonGeometry = new THREE.DodecahedronBufferGeometry( 5, 5);
+    let moonGeometry = new THREE.SphereBufferGeometry( 5, 32, 32);
 
     let moon = new THREE.Mesh( moonGeometry, moonMaterial );
     

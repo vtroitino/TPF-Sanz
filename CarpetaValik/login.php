@@ -1,30 +1,34 @@
 <?php
-    $DB_PATH = "./sqlite/login.sqlite3";
-    
-    $db_exists = file_exists($DB_PATH);
-    $message = '';
-
-    $db = new SQLite3($DB_PATH);
-    if (!$db_exists) {
-        $query = file_get_contents("./sqlite/login.sql");
-        $res = $db->exec($query);
-        if (!$res) {
-            die("error inicializando db");
-        }
-    }
-
     session_start();
 
+    require 'database.php';
+
     if (!empty($_POST['email']) && !empty($_POST['contraseña'])) {
-        $sql = "INSERT INTO users(email, password) VALUES(:email, :contraseña)";
-        $post = $db->prepare($sql);
-        $post->bindValue(':email', $_POST['email']);
-        $post->bindValue(':contraseña', $_POST['contraseña']);
-        if ($post->execute()) {
-            $message = 'Exito al crear el usuario';
-        } else {
-            $message = 'ERROR';
+        $records = $db->prepare('SELECT id, email, contraseña FROM users WHERE email=:email');
+        $records->bindParam(':email', $_POST['email']);
+        $results = $records->execute();
+        
+        $message = '';
+
+        while($row = $results->fetchArray(SQLITE3_ASSOC) ) {
+           $id = $row['id'];
+           $email = $row['email'];
+           $contraseña = $row['contraseña'];
+           if ($id != "") {
+               if ($contraseña == $_POST["contraseña"]) {
+                   $_SESSION["login"] = $email;
+                   header('Location: /CarpetaValik/camara_de_planeta.php');
+                } else {
+                    $message = "Contraseña incorrecta.";
+                }
+            } else {
+               $message = "El usuario no existe, porfavor registrese para continuar.";
+            }
         }
+        //echo "Operation done successfully\n";
+        $db->close();
+    } elseif (empty($_POST['email']) && empty($_POST['contraseña'])) {
+        $message = 'Ingrese sus credenciales.';
     }
 ?>
 <!DOCTYPE html>
@@ -44,25 +48,34 @@
         </div>
             <div class="row center-align">
             <h5>Iniciar sesión</h5>
+            <?php if(!empty($message)): ?>
+            <p><?= $message ?></p>
+            <?php endif; ?>
         </div>
-        <div class="row">
-            <div class="input-field col s12">
-                <input id="email_input" type="email" name="email" class="validate">
-                <label for="email_input">Email</label>
+        <form method="POST" action>
+            <div class="row">
+                <div class="input-field col s12">
+                    <input id="email_input" type="email" name="email" class="validate">
+                    <label for="email_input">Email</label>
+                </div>
             </div>
-        </div>
-        <div class="row">
-            <div class="input-field col s12">
-                <input id="password_input" type="password" name="contraseña" class="validate">
-                <label for="password_input">Contraseña</label>
-                <a href="#"><b>¿Olvido su contraseña?</b></a>
+            <div class="row">
+                <div class="input-field col s12">
+                    <input id="password_input" type="password" name="contraseña" class="validate">
+                    <label for="password_input">Contraseña</label>
+                    <a href="#"><b>¿Olvido su contraseña?</b></a>
+                </div>
             </div>
-        </div>
-        <div class="row"></div>
-        <div class="row">
-            <div class="col s6"><a href="registro.php">Crear Cuenta</a></div>
-            <div class="col s6 right-align"><a class="waves-effect waves-light btn">Ingresar</a></div>
-        </div>
+            <div class="row">
+                <?php if (!empty($message)): ?>
+                <span class="helper-text col s12" data-error="<?= $message ?>" type="text"></span>
+                <?php endif; ?>
+            </div>
+            <div class="row">
+                <div class="col s6"><a href="registro.php">Crear Cuenta</a></div>
+                <div class="col s6 right-align"><button class="waves-effect waves-light btn light-blue darken-3" type="submit">Ingresar</button></div>
+            </div>
+        </form>
     </div>
     <script type="module" src="js/login.js"></script>
 </body>
