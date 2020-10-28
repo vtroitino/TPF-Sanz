@@ -31,5 +31,5 @@ h1 {
     justify-content: space-between;
     padding: 0.3em 0em 0.3em 0.3em;
     border: 0.16em solid rgb(200,200,255);
-    z-index: 5;
+    z-index: 2;
 }
