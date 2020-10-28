@@ -8,9 +8,17 @@ let camera, scene, renderer;
 
 let directLight, directLightHelper, shadowCameraHelper;
 
+//CSS
+let items = document.getElementsByClassName('user-options'),
+    userView = document.getElementsByClassName('user-view'),
+    userStyle = getComputedStyle(userView[0]).height,
+    height = parseInt(userStyle) + 8;
+
 init();
 
 function init() {
+    //CSS
+    items[0].style.height = window.innerHeight - height + "px";
 
     // Renderer
     renderer = new THREE.WebGLRenderer( { canvas: screen, antialias: true } );
@@ -32,12 +40,18 @@ function init() {
     // Skybox		
     let cubeGeometry = new THREE.CubeGeometry( 1000, 1000, 1000 );
     let cubeMaterials = [
-        new THREE.MeshBasicMaterial( {map: new THREE.TextureLoader().load('./imagenes/Skybox/front.png'), side: THREE.DoubleSide} ),
-        new THREE.MeshBasicMaterial( {map: new THREE.TextureLoader().load('./imagenes/Skybox/back.png'), side: THREE.DoubleSide} ),
-        new THREE.MeshBasicMaterial( {map: new THREE.TextureLoader().load('./imagenes/Skybox/up.png'), side: THREE.DoubleSide} ),
-        new THREE.MeshBasicMaterial( {map: new THREE.TextureLoader().load('./imagenes/Skybox/down.png'), side: THREE.DoubleSide} ),
-        new THREE.MeshBasicMaterial( {map: new THREE.TextureLoader().load('./imagenes/Skybox/right.png'), side: THREE.DoubleSide} ),
-        new THREE.MeshBasicMaterial( {map: new THREE.TextureLoader().load('./imagenes/Skybox/left.png'), side: THREE.DoubleSide} )
+        // new THREE.MeshBasicMaterial( {map: new THREE.TextureLoader().load('./imagenes/Skybox1/front.png'), side: THREE.DoubleSide} ),
+        // new THREE.MeshBasicMaterial( {map: new THREE.TextureLoader().load('./imagenes/Skybox1/back.png'), side: THREE.DoubleSide} ),
+        // new THREE.MeshBasicMaterial( {map: new THREE.TextureLoader().load('./imagenes/Skybox1/left.png'), side: THREE.DoubleSide} ),
+        // new THREE.MeshBasicMaterial( {map: new THREE.TextureLoader().load('./imagenes/Skybox1/GalaxyTex_NegativeY.png'), side: THREE.DoubleSide} ),
+        // new THREE.MeshBasicMaterial( {map: new THREE.TextureLoader().load('./imagenes/Skybox1/GalaxyTex_PositiveZ.png'), side: THREE.DoubleSide} ),
+        // new THREE.MeshBasicMaterial( {map: new THREE.TextureLoader().load('./imagenes/Skybox1/GalaxyTex_NegativeZ.png'), side: THREE.DoubleSide} )
+        new THREE.MeshBasicMaterial( {map: new THREE.TextureLoader().load('./imagenes/Skybox2/GalaxyTex_PositiveX.png'), side: THREE.DoubleSide} ),
+        new THREE.MeshBasicMaterial( {map: new THREE.TextureLoader().load('./imagenes/Skybox2/GalaxyTex_NegativeX.png'), side: THREE.DoubleSide} ),
+        new THREE.MeshBasicMaterial( {map: new THREE.TextureLoader().load('./imagenes/Skybox2/GalaxyTex_PositiveY.png'), side: THREE.DoubleSide} ),
+        new THREE.MeshBasicMaterial( {map: new THREE.TextureLoader().load('./imagenes/Skybox2/GalaxyTex_NegativeY.png'), side: THREE.DoubleSide} ),
+        new THREE.MeshBasicMaterial( {map: new THREE.TextureLoader().load('./imagenes/Skybox2/GalaxyTex_PositiveZ.png'), side: THREE.DoubleSide} ),
+        new THREE.MeshBasicMaterial( {map: new THREE.TextureLoader().load('./imagenes/Skybox2/GalaxyTex_NegativeZ.png'), side: THREE.DoubleSide} )
     ];
     let cubeMaterial = new THREE.MeshFaceMaterial( cubeMaterials );
     
@@ -90,9 +104,13 @@ function init() {
 }
 
 function onWindowResize() {
+    console.log(parseInt(height));
 
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
+
+    //CSS
+    items[0].style.height = window.innerHeight - height + "px";
 
     renderer.setSize( window.innerWidth, window.innerHeight );
 
@@ -104,3 +122,16 @@ function render() {
     requestAnimationFrame(render);
 
 }
+
+//CSS
+
+//Sidenav
+document.addEventListener('DOMContentLoaded', function () {
+    var elems = document.querySelectorAll('.sidenav');
+    var instances = M.Sidenav.init(elems);
+});
+
+window.addEventListener('load', () => {
+    document.getElementById('carga').className = 'hide';
+    document.getElementById('contenido-pagina').className = 'center';
+});

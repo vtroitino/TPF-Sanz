@@ -10,6 +10,10 @@ var screen = document.getElementById('canvaspace');
 var directLight, directLightHelper;
 
 init();
+window.addEventListener('load', () => {
+    document.getElementById('carga').className = 'hide';
+    document.getElementById('contenido-pagina').className = '';
+})
 function init() {
 
     // Renderer

@@ -70,17 +70,23 @@ function render() {
 let close = document.getElementById('alert_close');
 let alert = document.getElementById('alert_box');
 
-close.addEventListener('click', () => alert.style.opacity = '0');
-alert.addEventListener('transitionend', () => alert.remove());
+if(close){close.addEventListener('click', () => alert.style.opacity = '0');}
+if(alert){alert.addEventListener('transitionend', () => alert.remove());}
 
 //JS Mostrar/Esconder Contraseña
-let password = document.getElementById('myPassword')
+let password = document.getElementById('password_input');
+let rpassword = document.getElementById('repeat-password_input');
+let toggle = document.getElementById('toggle');
 
-password.addEventListener('click', function () {
-    if (password.type === "password") {
-        password.type = "text";
+toggle.addEventListener('click', function () {
+    if (password.type === 'password') {
+        password.setAttribute('type', 'text');
+        if(rpassword){rpassword.setAttribute('type', 'text')};
+        toggle.className = 'fa fa-eye-slash icon_style';
     } else {
-        password.type = "password";
+        password.setAttribute('type', 'password');
+        if(rpassword){rpassword.setAttribute('type', 'password')};
+        toggle.className = 'fa fa-eye icon_style';
     }
 });
 

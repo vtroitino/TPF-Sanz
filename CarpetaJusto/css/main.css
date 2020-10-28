@@ -8,7 +8,7 @@ body {
 }
 canvas{
     position: absolute;
-    display: block;
+    z-index: -99;
 }
 h1 {
     position: absolute;
@@ -27,9 +27,12 @@ h1 {
     position: fixed;
     display: absolute;
     background: rgba(196,195,251,0.7);
-    position: fixed;
     justify-content: space-between;
     padding: 0.3em 0em 0.3em 0.3em;
     border: 0.16em solid rgb(200,200,255);
     z-index: 5;
+}
+
+#carga {
+    position: fixed;
 }

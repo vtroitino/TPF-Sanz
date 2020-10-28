@@ -1,5 +1,6 @@
 CREATE TABLE users(
    id INT PRIMARY KEY NOT NULL,
+   usuario VARCHAR(200) NOT NULL,
    email VARCHAR(200) NOT NULL,
    contraseña VARCHAR(200) NOT NULL
 );
