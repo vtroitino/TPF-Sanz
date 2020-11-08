@@ -6,25 +6,32 @@
 
     require 'database.php';
 
+    function console_log( $data ){
+        echo '<script>';
+        echo 'console.log("ID: " + '. json_encode( $data ) .')';
+        echo '</script>';
+    }
+
     $errormsg = '';
+    $id = '';
 
     if (!empty($_POST['email']) && !empty($_POST['contraseña'])) {
-        $records = $db->prepare('SELECT id, usuario, email, contraseña FROM users WHERE email=:email');
-        $records->bindParam(':email', $_POST['email']);
+        $records = $db->prepare('SELECT * FROM users');
+        // $records->bindParam(':email', $_POST['email']);
         $results = $records->execute();
-            
+        
         while($row = $results->fetchArray(SQLITE3_ASSOC) ) {
             $id = $row['id'];
             $usuario = $row['usuario'];
             $email = $row['email'];
             $contraseña = $row['contraseña'];
             if ($id != "") {
-                if ($contraseña == $_POST["contraseña"]) {
+                if ($email == $_POST["email"] && $contraseña == $_POST["contraseña"]) {
                     $_SESSION["usuario"] = $usuario;
                     $_SESSION["email"] = $email;
                     header('Location: /CarpetaValik/camara_de_planeta.php');
                 } else {
-                    $errormsg = "Contraseña incorrecta.";
+                    $errormsg = "Contraseña y/o email incorrecto/os.";
                 }
             } else {
                 $errormsg = "El usuario no existe, porfavor registrese para continuar.";

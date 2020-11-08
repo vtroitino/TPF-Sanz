@@ -1,7 +1,7 @@
 import * as THREE from '../../node_modules/three/build/three.module.js';
 
 let screen = document.getElementById('canvas-login');
-let scene, camera, renderer, stars, starGeo;
+let scene, camera, renderer, stars, starGeo, material;
 
 init();
 
@@ -17,11 +17,11 @@ function init() {
     document.body.appendChild(renderer.domElement);
 
     starGeo = new THREE.Geometry();
-    for(let i=0; i<6000; i++) {
+    for(let i = 0; i < 6000; i++) {
         let star = new THREE.Vector3(
-        Math.random() * 600 - 300,
-        Math.random() * 600 - 300,
-        Math.random() * 600 - 300
+            Math.random() * 600 - 300,
+            Math.random() * 600 - 300,
+            Math.random() * 600 - 300
         );
         star.velocity = 0;
         star.acceleration = 0.02;
@@ -31,8 +31,8 @@ function init() {
     let sprite = new THREE.TextureLoader().load('./imagenes/star.png');
     let starMaterial = new THREE.PointsMaterial({
         color: 0xaaaaaa,
-        size: 0.7,
-        map: sprite
+        size: 0.22,
+        map: sprite,
     });
 
     stars = new THREE.Points(starGeo, starMaterial);

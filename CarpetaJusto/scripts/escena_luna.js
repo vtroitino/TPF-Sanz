@@ -3,43 +3,64 @@ import { OrbitControls } from '../../../node_modules/three/examples/jsm/controls
 import { GLTFLoader } from  '../../../node_modules/three/examples/jsm/loaders/GLTFLoader.js';
 import { VertexNormalsHelper } from '../../../node_modules/three/examples/jsm/helpers/VertexNormalsHelper.js';
 
-var cameratorend, scene, renderer,camera,loader,moon,moonposition,controles,axesHelper,gridHelper,cubeMaterials,cubeMaterial,cubeGeometry,skybox,vertixhelper,raycaster,mouse,intersects;
+var scene,renderer,camera,loader,loaderobj,directLight,moon,controles,screen = document.getElementById('canvaspace');
+var cubefaces,cubeMaterial,cubeGeometry,skybox,geocilind,matcilind,cylinder,countrender = 0,geometrypart,verticespart,part,materialpart,particles,randomdirect = [-1,1];
+var raycaster,mouse,maxdistnat,mindistnat,intersects,crasheamuniverso;
+var selectterrien = null;
+var nterr = ['Copernicus','Kepler','Langrenus','Stevinus','Oceanus Procellarum','Eduardo Castex'],randomcolor = [0xFF2300,0x047DFE,0x9804FE,0xF3FE04,0x04FE98,0xFFFFF0],angleX=[-Math.PI / 2,Math.PI / 2,0,0,0,0],angleZ=[0,0,-Math.PI / 2,Math.PI / 2,9.4,0];
+var dterr = {
+    'Copernicus':'Sector donde se encuentra la bandera del primer alunisaje',
+    'Kepler':'Es kepler',
+    'Langrenus':'Masa de caca',
+    'Stevinus':'ajnfojawoi',
+    'Oceanus Procellarum':'PADKASKDAg',
+    'Eduardo Castex':'SARACATUNGA'
+}
+var pterr = {
+    'Copernicus':'55.000$',
+    'Kepler':'10.000$',
+    'Langrenus':'20.000$',
+    'Stevinus':'13.000$',
+    'Oceanus Procellarum':'42.000$',
+    'Eduardo Castex':'69.000$'
+}
 
-var screen = document.getElementById('canvaspace');
+//CSS
+let items = document.getElementsByClassName('user-options'),
+    userView = document.getElementsByClassName('user-view'),
+    userStyle = getComputedStyle(userView[0]).height,
+    height = parseInt(userStyle) + 8;
 
-var directLight, directLightHelper;
+let spanterr = document.getElementById('nombre-terreno'),
+    imgterr = document.getElementById('foto-terreno'),
+    descterr = document.getElementById('desc-terreno'),
+    precioterr = document.getElementById('precio-terreno');
 
 init();
-window.addEventListener('load', () => {
-    document.getElementById('carga').className = 'hide';
-    document.getElementById('contenido-pagina').className = '';
-})
-function init() {
+function init() {/* Escenea, render, camara, controles, skybox, luna, luces,*/
+    //CSS
+    items[0].style.height = window.innerHeight - height + "px";
 
-    // Renderer
     scene = new THREE.Scene();
-    
+
     renderer = new THREE.WebGLRenderer( { antialias: true, canvas : screen} );
     renderer.setSize( window.innerWidth, window.innerHeight );
-    
     document.body.appendChild( renderer.domElement );
 
-    camera = new THREE.PerspectiveCamera( 25, window.innerWidth / window.innerHeight, 50, 100000);
-    camera.position.set(1800,300,0)
+    camera = new THREE.PerspectiveCamera( 30, window.innerWidth / window.innerHeight, 1, 2);
+    camera.position.set(3700,800,-400)
     
-    directLight = new THREE.DirectionalLight( 0xfef8dd, 2);
-    //directLight.target.position.set(x,y,z)
+    directLight = new THREE.DirectionalLight( 0xfef8dd, 3);
     scene.add(directLight);
 
     controles = new OrbitControls( camera, renderer.domElement );
-    
     controles.enablePan = false;
-    controles.rotateSpeed = 0.32;
-    controles.minDistance = 700; 
+    controles.autoRotateSpeed = 4;
+    controles.minDistance = 700;
     controles.maxDistance = 5000;
-
+    // Skybox
     cubeGeometry = new THREE.CubeGeometry( 10000, 10000, 10000 );
-    cubeMaterials = [
+    cubefaces = [
         new THREE.MeshBasicMaterial( {map: new THREE.TextureLoader().load('./imagenes/Skybox/GalaxyTex_PositiveX.png'), side: THREE.DoubleSide} ),
         new THREE.MeshBasicMaterial( {map: new THREE.TextureLoader().load('./imagenes/Skybox/GalaxyTex_NegativeX.png'), side: THREE.DoubleSide} ),
         new THREE.MeshBasicMaterial( {map: new THREE.TextureLoader().load('./imagenes/Skybox/GalaxyTex_PositiveY.png'), side: THREE.DoubleSide} ),
@@ -47,48 +68,94 @@ function init() {
         new THREE.MeshBasicMaterial( {map: new THREE.TextureLoader().load('./imagenes/Skybox/GalaxyTex_PositiveZ.png'), side: THREE.DoubleSide} ),
         new THREE.MeshBasicMaterial( {map: new THREE.TextureLoader().load('./imagenes/Skybox/GalaxyTex_NegativeZ.png'), side: THREE.DoubleSide} )
     ];
-    cubeMaterial = new THREE.MeshFaceMaterial( cubeMaterials );
+    loader = new THREE.TextureLoader();
+    cubeMaterial = new THREE.MeshFaceMaterial( cubefaces );
     skybox = new THREE.Mesh( cubeGeometry, cubeMaterial );
+    skybox.name = 'skybox'
     scene.add( skybox );
     loader = new GLTFLoader();
     loader.load(
-        // resource URL
         './modelos/moon.glb',
-        // called when the resource is loaded
         function ( gltf ) {
-
-            scene.add( gltf.scene );
-
-            gltf.animations; // Array<THREE.AnimationClip>
-            gltf.scene; // THREE.Group
-            gltf.scenes; // Array<THREE.Group>
-            gltf.cameras; // Array<THREE.Camera>
-            gltf.asset; // Object
-
+            gltf.scene.children[0].name = 'moon'
+            scene.add( gltf.scene.children[0] );
         },
-        // called while loading is progressing
         function ( xhr ) {
-
             console.log( ( xhr.loaded / xhr.total * 100 ) + '% loaded' );
-
         },
-        // called when loading has errors
         function ( error ) {
-
-            console.log( 'An error happened' );
-
+            console.log( 'An error happened' )
         }
-    );
-
-    axesHelper = new THREE.AxesHelper( 1000 );
-    scene.add( axesHelper );
-    
+    );//
+    //Cylindros = id terreno
+    for(var t = 0; t < nterr.length;t++){
+        const geocilind = new THREE.CylinderGeometry( 25, 0, 1005 , 64 );
+        const matcilind = new THREE.MeshLambertMaterial( {color: randomcolor[t],transparent:true, opacity: 0.75} );
+        const cylinder = new THREE.Mesh( geocilind, matcilind );
+        cylinder.name = 'ter-'.concat(nterr[t]) 
+        cylinder.rotateX(angleX[t])
+        cylinder.rotateZ(angleZ[t])
+        scene.add( cylinder );//
+    }
+    //Listeners utiles para el canvas y el detector de objetos(mouse y raycaster)
     raycaster = new THREE.Raycaster();
     mouse = new THREE.Vector2();
-    //window.addEventListener( 'mousemove', onDocumentMouseMove, false );
-    window.addEventListener( 'mousedown', onDocumentMouseMove, false );
+    window.addEventListener( 'mousemove', onDocumentMouseMove, false );
     window.addEventListener( 'resize', onWindowResize, false );
-    render()
+    window.addEventListener( 'pointerup', tentativecalltodatabase, false );
+    console.log(scene.children)
+    config();
+    render();
+}
+
+function tentativecalltodatabase (event) {
+    if( selectterrien != null) {
+        spanterr.innerHTML = selectterrien;
+        imgterr.src = "imagenes/Terrenos/" + selectterrien + ".jpg";
+        precioterr.innerHTML = pterr[selectterrien]; 
+        descterr.innerHTML = dterr[selectterrien];
+    };
+}
+function config() {
+    const panel = new dat.GUI();
+    const camera = panel.addFolder('Config Camera');
+    const light = panel.addFolder('Config Light');
+    const terrines = panel.addFolder('Terrines')
+    var settings = {
+        'autorotate':true,
+        'autorotate-speed':10,
+        'intencity-light':3,
+        'light-color':0xfef8dd,
+        'show-terrines': true,
+    }
+    camera.add(settings,'autorotate').onChange(autoRotate)
+    camera.add(settings,'autorotate-speed',0.1,200).onChange(autoRotateSpeedChange)
+    light.addColor(settings, "light-color").listen().onChange(ChangeColorLight)
+    light.add(settings,'intencity-light',0.1,30).onChange(IntencityLightChange)
+    terrines.add(settings,'show-terrines').onChange(changeTerrines)
+
+    function autoRotate(bool){
+        controles.autoRotate = bool
+    }
+    function autoRotateSpeedChange( factorrot ){
+        controles.autoRotateSpeed = factorrot
+    }
+    function IntencityLightChange(intens){
+        directLight.intensity = intens
+    }
+    function ChangeColorLight(color) {
+        directLight.color.setHex(color)
+    }
+    function changeTerrines(bool) {
+        for(var a = 0; a < scene.children.length;a++){
+            if(scene.children[a].name.substr(0,4) == 'ter-'){
+                scene.children[a].visible = bool
+            }
+        }
+    }
+    camera.open()
+    light.open()
+    terrines.open()
 }
 
 function onWindowResize() { /* AJUSTE DE CAMARA*/
@@ -98,48 +165,61 @@ function onWindowResize() { /* AJUSTE DE CAMARA*/
 }
 
 function render() { /* RENDEREAR LA ESCENA*/
-    // raycaster.setFromCamera( mouse, camera );
-    // intersects = raycaster.intersectObjects( scene.children )
-    // for ( var i = 0; i < intersects.length; i++ ) {
-    //     if(intersects[i].object.name == 'moon'){
-    //         intersects[i].object.rotateX(0.3/*.rotation(new THREE.Euler(1,1,1,'XYZ'))*/)
-    //     }
+    //Detecta cuando algo no esta siendo tocado (los terrenos especificamente)
+    countrender += 20
+    if(countrender > 800){
+        camera.far = 100000 
+    }
+    // if(crasheamuniverso == true){
+    //     camera.fov += 0.5 
     // }
-    console.log()
-    // if(scene.children.length > 3){
-    //     scene.children[3].position.z += 1
-    // }
-    directLight.position.set(camera.position.x, camera.position.y + 1300,camera.position.z - 1300)
+    selectterrien = null
+    controles.enabled = true
+    controles.update()
+    for(var g = 0; g < scene.children.length;g++){
+        if(scene.children[g].name.substr(0,4) == 'ter-'){
+            scene.children[g].material.opacity = 0.75
+        }
+    }//
+    /* MAIN */
+    raycaster.setFromCamera( mouse, camera );
+    intersects = raycaster.intersectObjects( scene.children )
+    for ( var i = 0; i < intersects.length; i++ ) {//Identifica la luna**GRAB**
+        if(intersects[i].object.name == 'moon'){
+            screen.style.cursor = 'grab';
+            break;
+        }
+        else if(intersects[i].object.name != 'moon'){
+            screen.style.cursor = 'default';
+        }
+    }
+    for ( var l = 0; l < intersects.length; l++ ) {//Identifica terrenos**POINTER**
+        if(intersects[l].object.name.substr(0,4) == 'ter-' && l == 0){// el segundo condicional sirve para saber si la luna no esta de por medio 
+            screen.style.cursor = 'pointer';
+            selectterrien = intersects[l].object.name.substr(4,intersects[l].object.name.lenght)
+            intersects[l].object.material.opacity = 1.0
+        }
+    }
+    //CSS
+    items[0].style.height = window.innerHeight - height + "px";
+
+    //console.log(scene.children)  
+    directLight.position.set(camera.position.x, camera.position.y - 300,camera.position.z - 700)
+    camera.updateProjectionMatrix();
     renderer.render( scene, camera );
     requestAnimationFrame(render);
 }
 
-function onDocumentMouseMove( event ) { /* ACTUALIZAR POSICION DE MOUSE*/
+function onDocumentMouseMove( event ) { /* ACTUALIZAR POSICION DEL MOUSE*/
     mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
     mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
 }
 
-// function initMoon() {
-//     var moon,camera,loader,moonposition,controles,axesHelper,gridHelper;
-//     loader = new GLTFLoader();
-//     loader.load( './modelos/moon.glb', handle_load);
-//     function handle_load(gltf) {
-//         moon = gltf.scene.children[0];
-//         scene.add(moon);
-//         console.log(moon.position)
-//     }
-//     moonposition = [getRandomInt(8000,-8000),getRandomInt(8000,-8000),getRandomInt(8000,-8000)];
-//     gridHelper = new THREE.GridHelper( 1000,30 );
-//     gridHelper.position.set(moonposition);
-//     scene.add( gridHelper );
-//     axesHelper = new THREE.AxesHelper( 500 );
-//     scene.add( axesHelper );
-//     camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 50, 100000);
-//     camera.position.set( moonposition - 1200, moonposition - 300, moonposition -  0 );
-//     controles = new OrbitControls( camera, renderer.domElement );
-//     controles.enablePan = false;
-//     controles.rotateSpeed = 0.42;
-//     controles.minDistance = 600; 
-//     controles.maxDistance = 3000;
-//     cameratorend = camera;
-// }
+
+//CSS
+
+//Sidenav
+document.addEventListener('DOMContentLoaded', function () {
+    var elems = document.querySelectorAll('.sidenav');
+    var instances = M.Sidenav.init(elems);
+});

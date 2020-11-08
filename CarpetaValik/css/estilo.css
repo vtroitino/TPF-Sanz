@@ -5,7 +5,7 @@ input {
 	color: white;
 }
 span {
-	text-shadow: 0px 0px 5px black; 
+	text-shadow: 0px 0px 9px black; 
 }
 #canvas-luna {
 	z-index: -99;
@@ -120,4 +120,35 @@ span {
     font-size: 20px;
     color: white;
     cursor:pointer; 
+}
+#user-view_terreno{
+	height: 300px;
+	padding-top: 240px;
+}
+#nombre-terreno{
+	font-size: 200%;
+	text-shadow: 0px 0px 9px black;
+}
+#terrenos-side {
+	width: 533px;
+}
+#precio-terreno {
+	margin-left: 15px;
+}
+#backg-terreno {
+	width: 533px;
+	height: 300px;
+}
+.desc-container {
+	width: 503px;
+	height: 200px;
+	margin-left: 15px;
+}
+.dg .c input[type=text] {
+    background: #303030;
+    outline: none;
+    height: 13px;
+}
+.dg .cr.number input[type=text]{
+    height: 13px;
 }

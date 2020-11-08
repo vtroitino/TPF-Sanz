@@ -7,18 +7,20 @@
     require 'database.php';
 
     if (!empty($_POST['email']) && !empty($_POST['contraseña'])) {
-        $usuario = $_POST['usuario'];
-        $email = $_POST['email'];
-        $contraseña = $_POST['contraseña'];
-        $rcontraseña = $_POST['rcontraseña'];
+        $usuario = trim($_POST['usuario']);
+        $email = trim($_POST['email']);
+        $contraseña = trim($_POST['contraseña']);
+        $rcontraseña = trim($_POST['rcontraseña']);
         $results = $db->query("SELECT email FROM users WHERE email = '$email'");
+
 
         $rowEmail = [];
         while($row = $results->fetchArray(SQLITE3_ASSOC) ) {
             $rowEmail[] = $row;
         }
-
-        if (count($rowEmail) > 0) {
+        if ($usuario == '' || $email == '' || $contraseña == '' || $rcontraseña == '') {
+            $errormsg = 'Complete los campos vacios';
+        } elseif (count($rowEmail) > 0) {
             $errormsg = 'Este mail ya esta en uso.';
         } elseif ($contraseña != $rcontraseña) {
             $errormsg = 'La contraseña no coincide.';
