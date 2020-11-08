@@ -12,12 +12,12 @@ var nterr = ['Copernicus','Kepler','Langrenus','Stevinus','Oceanus Procellarum',
     randomcolor = [0xFF2300,0x047DFE,0x9804FE,0xF3FE04,0x04FE98,0xFFFFF0],
     angleX = [-Math.PI - 0.3,Math.PI / 2,-1.9,0,0.3,0], angleZ = [0,0,-Math.PI / 12,Math.PI / 2,0,-1];
 var dterr = {
-    'Copernicus':'Sector donde se encuentra la bandera del primer alunisaje',
-    'Kepler':'Es kepler',
-    'Langrenus':'Masa de caca',
-    'Stevinus':'ajnfojawoi',
-    'Oceanus Procellarum':'PADKASKDAg',
-    'Eduardo Castex':'SARACATUNGA'
+    'Copernicus':'Sector donde se encuentra la bandera del primer alunisaje. Es donde se encuentra el primer polideportivo Lunar y el Museo de los primeros allegados',
+    'Kepler':"Zona donde se grabaron las escenas de 'Alein 3', es la zona mas habitable y con mejor vista. Tiene muchos crateres profundos.",
+    'Langrenus':'Se conoce como la zona oscura o zona muerta por su poca actividad, pero es la mas lisa y mas rica en titanita.',
+    'Stevinus':'Simplemente Stevinus, el unico lugar en la luna donde se encontro una cueva profunda, inexplorada todavia, pero vuelve loco a los mas pelotudos con impetu de exploracion',
+    'Oceanus Procellarum':'Zona mas habitada por los humanos y por los androides de andromeda, ya que posee un oceano es la zona mas prospera.',
+    'Eduardo Castex':'La zona del "Dios" o mejor conocido Eduardo "Pampeano" Castex, este representa el culto a las empandas de morcilla en la Luna,es la zona mas prestigiosa(debido al mismo) y la mas fria a su vez.'
 }
 var pterr = {
     'Copernicus':'55.000$',
