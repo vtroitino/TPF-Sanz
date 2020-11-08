@@ -23,6 +23,11 @@ h1 {
     border: 5px solid black;
     padding: .2em;
 }
+h5 {
+    color:red;
+    z-index: 2;
+    visibility: hidden;
+}
 .dg .c input[type=text] {
     background: #303030;
     outline: none;
