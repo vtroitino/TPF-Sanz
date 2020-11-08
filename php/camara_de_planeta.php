@@ -7,7 +7,7 @@
 		<title>La Luna</title>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
-		<link type="text/css" rel="stylesheet" href="css/estilo.css">
+		<link type="text/css" rel="stylesheet" href="../css/estilo.css">
 		<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 		<link type="text/css" rel="stylesheet" href="../node_modules/materialize-css/dist/css/materialize.min.css"  media="screen,projection"/>
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -53,7 +53,7 @@
 					<li>
 						<div class="user-view">
 							<div class="background">
-								<img src="imagenes/backg.jpg" width="300" height="212">
+								<img src="../imagenes/backg.jpg" width="300" height="212">
 							</div>
 							<div class="logo"></div>
 							<span class="name white-text center-align"><?php echo $_SESSION["usuario"]; ?></span>
@@ -76,7 +76,7 @@
 			<ul class="sidenav grey darken-4" id="terrenos-side">
 				<li><div id="user-view_terreno" class="user-view">
 					<div id = "backg-terreno" class="background">
-						<img id="foto-terreno" src="imagenes/backg.jpg" width="533" height="300">
+						<img id="foto-terreno" src="" width="533" height="300">
 					</div>
 					<span id="nombre-terreno" class="name white-text center-align"></span>
 				</div></li>
@@ -92,7 +92,7 @@
 			</ul>
 		</div>
 
-		<script type="module" src="js/escena_luna.js"></script>
+		<script type="module" src="../js/escena_luna.js"></script>
 		<script type="text/javascript" src="../node_modules/materialize-css/dist/js/materialize.min.js"></script>
 		<script src="https://kit.fontawesome.com/b99e675b6e.js"></script>
 	</body>

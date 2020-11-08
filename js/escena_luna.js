@@ -64,12 +64,12 @@ function init() {/* Escenea, render, camara, controles, skybox, luna, luces,*/
 
     cubeGeometry = new THREE.CubeGeometry( 10000, 10000, 10000 );// Skybox
     cubefaces = [
-        new THREE.MeshBasicMaterial( {map: new THREE.TextureLoader().load('./imagenes/Skybox/GalaxyTex_PositiveX.png'), side: THREE.DoubleSide} ),
-        new THREE.MeshBasicMaterial( {map: new THREE.TextureLoader().load('./imagenes/Skybox/GalaxyTex_NegativeX.png'), side: THREE.DoubleSide} ),
-        new THREE.MeshBasicMaterial( {map: new THREE.TextureLoader().load('./imagenes/Skybox/GalaxyTex_PositiveY.png'), side: THREE.DoubleSide} ),
-        new THREE.MeshBasicMaterial( {map: new THREE.TextureLoader().load('./imagenes/Skybox/GalaxyTex_NegativeY.png'), side: THREE.DoubleSide} ),
-        new THREE.MeshBasicMaterial( {map: new THREE.TextureLoader().load('./imagenes/Skybox/GalaxyTex_PositiveZ.png'), side: THREE.DoubleSide} ),
-        new THREE.MeshBasicMaterial( {map: new THREE.TextureLoader().load('./imagenes/Skybox/GalaxyTex_NegativeZ.png'), side: THREE.DoubleSide} )
+        new THREE.MeshBasicMaterial( {map: new THREE.TextureLoader().load('../imagenes/Skybox/GalaxyTex_PositiveX.png'), side: THREE.DoubleSide} ),
+        new THREE.MeshBasicMaterial( {map: new THREE.TextureLoader().load('../imagenes/Skybox/GalaxyTex_NegativeX.png'), side: THREE.DoubleSide} ),
+        new THREE.MeshBasicMaterial( {map: new THREE.TextureLoader().load('../imagenes/Skybox/GalaxyTex_PositiveY.png'), side: THREE.DoubleSide} ),
+        new THREE.MeshBasicMaterial( {map: new THREE.TextureLoader().load('../imagenes/Skybox/GalaxyTex_NegativeY.png'), side: THREE.DoubleSide} ),
+        new THREE.MeshBasicMaterial( {map: new THREE.TextureLoader().load('../imagenes/Skybox/GalaxyTex_PositiveZ.png'), side: THREE.DoubleSide} ),
+        new THREE.MeshBasicMaterial( {map: new THREE.TextureLoader().load('../imagenes/Skybox/GalaxyTex_NegativeZ.png'), side: THREE.DoubleSide} )
     ];
     loader = new THREE.TextureLoader();
     cubeMaterial = new THREE.MeshFaceMaterial( cubefaces );
@@ -79,7 +79,7 @@ function init() {/* Escenea, render, camara, controles, skybox, luna, luces,*/
 
     loader = new GLTFLoader();
     loader.load(//moon
-        './modelos/moon.glb',
+        '../modelos/moon.glb',
         function ( gltf ) {
             gltf.scene.children[0].name = 'moon'
             scene.add( gltf.scene.children[0] );
@@ -87,7 +87,7 @@ function init() {/* Escenea, render, camara, controles, skybox, luna, luces,*/
     );
     loaderobj = new OBJLoader()
     loaderobj.load(//satelit
-        './modelos/sat.obj',
+        '../modelos/sat.obj',
         function ( obj ) {
             obj.name = 'Satellite-DiscovM39'
             obj.position.y = 490
@@ -98,7 +98,7 @@ function init() {/* Escenea, render, camara, controles, skybox, luna, luces,*/
 
      geometrypart = new THREE.BufferGeometry();
      verticespart = [];
-     part = new THREE.TextureLoader().load( './imagenes/disc.png' );
+     part = new THREE.TextureLoader().load( '../imagenes/disc.png' );
     
     for ( let i = 0; i < 725; i ++ ) {
         const x = Math.floor(Math.random() * 5001) * randomdirect[Math.floor(Math.random() * 2)]
@@ -111,6 +111,7 @@ function init() {/* Escenea, render, camara, controles, skybox, luna, luces,*/
     materialpart = new THREE.PointsMaterial( { size: 35, sizeAttenuation: true, map: part, alphaTest: 0.5, transparent: true } );
     materialpart.color.setHSL( 1.0, 0.3, 0.7 );
     particles = new THREE.Points( geometrypart, materialpart );
+    particles.visible = false;
     scene.add( particles );
     
     //Cylindros = id terreno
@@ -137,7 +138,7 @@ function init() {/* Escenea, render, camara, controles, skybox, luna, luces,*/
 function tentativecalltodatabase (event) {
     if( selectterrien != null) {
         spanterr.innerHTML = selectterrien;
-        imgterr.src = "imagenes/Terrenos/" + selectterrien + ".jpg";
+        imgterr.src = "../imagenes/Terrenos/" + selectterrien + ".jpg";
         precioterr.innerHTML = pterr[selectterrien]; 
         descterr.innerHTML = dterr[selectterrien];
     };
@@ -155,8 +156,8 @@ function config() {
         'frustrum':45,
         'intencity-light':1.9,
         'light-color':0xffffff,
-        'Visibility-terrines': true,
-        'Visibility-Particles':true,
+        'Visibility-terrines':true,
+        'Visibility-Particles':false,
         'BlackHole':false
     }
     camera.add(settings,'autorotate').onChange(autoRotate)
@@ -177,7 +178,7 @@ function render() { /* RENDEREAR LA ESCENA*/
     const time = Date.now() * 0.00005;
     const h = ( 360 * ( 1.0 + time ) % 360 ) / 360;
     materialpart.color.setHSL( h, 0.5, 0.5 );
-    countrender += 10//Cambia el color de las particulas
+    countrender += 20//Cambia el color de las particulas
     if(countrender > 600){
         camera.far = 100000 
     }//Espera a que se cargue toda la escena
