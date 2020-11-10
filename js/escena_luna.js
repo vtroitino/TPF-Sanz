@@ -4,7 +4,7 @@ import { GLTFLoader } from  '../../node_modules/three/examples/jsm/loaders/GLTFL
 import { OBJLoader } from  '../../node_modules/three/examples/jsm/loaders/OBJLoader.js';
 import { VertexNormalsHelper } from '../../node_modules/three/examples/jsm/helpers/VertexNormalsHelper.js';
 
-var scene,renderer,camera,loader,loaderobj,directLight,moon,controles,screen = document.getElementById('canvas-luna');
+var scene,renderer,camera,loader,loaderobj,directLight,moon,controles,screen = document.getElementById('canvas-luna'),grabbing;
 var cubefaces,cubeMaterial,cubeGeometry,skybox,geocilind,matcilind,cylinder,countrender = 0,geometrypart,verticespart,part,materialpart,particles,randomdirect = [-1,1];
 var raycaster,mouse,maxdistnat,mindistnat,intersects,crasheamuniverso;
 var selectterrien = null;
@@ -26,7 +26,7 @@ var pterr = {
     'Stevinus':'13.000$',
     'Oceanus Procellarum':'42.000$',
     'Eduardo Castex':'69.000$'
-}
+} 
 
 //CSS
 let items = document.getElementsByClassName('user-options'),
@@ -62,7 +62,7 @@ function init() {/* Escenea, render, camara, controles, skybox, luna, luces,*/
     controles.minDistance = 700;
     controles.maxDistance = 5000;
 
-    cubeGeometry = new THREE.CubeGeometry( 10000, 10000, 10000 );// Skybox
+    cubeGeometry = new THREE.CubeGeometry( 60000, 60000, 60000 );// Skybox
     cubefaces = [
         new THREE.MeshBasicMaterial( {map: new THREE.TextureLoader().load('../imagenes/Skybox/GalaxyTex_PositiveX.png'), side: THREE.DoubleSide} ),
         new THREE.MeshBasicMaterial( {map: new THREE.TextureLoader().load('../imagenes/Skybox/GalaxyTex_NegativeX.png'), side: THREE.DoubleSide} ),
@@ -129,13 +129,18 @@ function init() {/* Escenea, render, camara, controles, skybox, luna, luces,*/
     mouse = new THREE.Vector2();
     window.addEventListener( 'mousemove', onDocumentMouseMove, false );
     window.addEventListener( 'resize', onWindowResize, false );
+    window.addEventListener( 'pointerdown', grab, false );
     window.addEventListener( 'pointerup', tentativecalltodatabase, false );
     console.log(scene.children)
     config();
     render();
 }
 
+function grab(event){
+    grabbing = true;
+}
 function tentativecalltodatabase (event) {
+    grabbing = false;
     if( selectterrien != null) {
         spanterr.innerHTML = selectterrien;
         imgterr.src = "../imagenes/Terrenos/" + selectterrien + ".jpg";
@@ -196,22 +201,19 @@ function render() { /* RENDEREAR LA ESCENA*/
     /* MAIN */
     raycaster.setFromCamera( mouse, camera );
     intersects = raycaster.intersectObjects( scene.children )
-    for ( var i = 0; i < intersects.length; i++ ) {//Identifica la luna**GRAB**
-        if(intersects[i].object.name == 'moon'){
-            screen.style.cursor = 'grab';
-            break;
-        }
-        else if(intersects[i].object.name != 'moon'){
-            screen.style.cursor = 'default';
-        }
-    }
     for ( var l = 0; l < intersects.length; l++ ) {//Identifica terrenos**POINTER**
         if(intersects[l].object.name.substr(0,4) == 'ter-' && l == 0){// el segundo condicional sirve para saber si la luna no esta de por medio 
             screen.style.cursor = 'pointer';
             selectterrien = intersects[l].object.name.substr(4,intersects[l].object.name.lenght)
             console.log(selectterrien)
             intersects[l].object.material.opacity = 1.0
+            break;
+        }else{
+            screen.style.cursor = 'default'
         }
+    }
+    if(grabbing == true){
+        screen.style.cursor = 'grabbing'
     }
     //CSS
     items[0].style.height = window.innerHeight - height + "px";
