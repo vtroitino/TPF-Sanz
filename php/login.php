@@ -3,14 +3,15 @@
 
     unset($_SESSION['usuario']);
     unset($_SESSION['email']);
+    unset($_SESSION['saldo']);
 
     require 'database.php';
 
-    function console_log( $data ){
-        echo '<script>';
-        echo 'console.log("ID: " + '. json_encode( $data ) .')';
-        echo '</script>';
-    }
+    // function console_log( $data ){
+    //     echo '<script>';
+    //     echo 'console.log("ID: " + '. json_encode( $data ) .')';
+    //     echo '</script>';
+    // }
 
     $errormsg = '';
     $id = '';
@@ -25,10 +26,12 @@
             $usuario = $row['usuario'];
             $email = $row['email'];
             $contraseña = $row['contraseña'];
+            $saldo = $row['saldo'];
             if ($id != "") {
                 if ($email == $_POST["email"] && $contraseña == $_POST["contraseña"]) {
                     $_SESSION["usuario"] = $usuario;
                     $_SESSION["email"] = $email;
+                    $_SESSION["saldo"] = $saldo;
                     header('Location: camara_de_planeta.php');
                 } else {
                     $errormsg = "Contraseña y/o email incorrecto/os.";

@@ -25,11 +25,12 @@
         } elseif ($contraseña != $rcontraseña) {
             $errormsg = 'La contraseña no coincide.';
         } else {
-            $sql = 'INSERT INTO users(id, usuario, email, contraseña) VALUES("'.uniqid().'", :usuario, :email, :contraseña)';
+            $sql = 'INSERT INTO users(id, usuario, email, contraseña, saldo) VALUES("'.uniqid().'", :usuario, :email, :contraseña, :saldo)';
             $post = $db->prepare($sql);
             $post->bindValue(':usuario', $usuario);
             $post->bindValue(':email', $email);
             $post->bindValue(':contraseña', $contraseña);
+            $post->bindValue(':saldo', 1000000);
             $post->execute();
             $message = 'Exito al crear el usuario';
         }
