@@ -12,12 +12,12 @@ var nterr = ['Copernicus','Kepler','Langrenus','Stevinus','Oceanus Procellarum',
     randomcolor = [0xFF2300,0x047DFE,0x9804FE,0xF3FE04,0x04FE98,0xFFFFF0],
     angleX = [-Math.PI - 0.3,Math.PI / 2,-1.9,0,0.3,0], angleZ = [0,0,-Math.PI / 12,Math.PI / 2,0,-1];
 var dterr = {
-    'Copernicus':'Sector donde se encuentra la bandera del primer alunisaje',
-    'Kepler':'Es kepler',
-    'Langrenus':'Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptates qui ab eaque asperiores debitis ratione rem reprehenderit! Quam recusandae doloribus perferendis quia maiores odio necessitatibus. Itaque quod ipsam odit est?',
-    'Stevinus':'ajnfojawoi',
-    'Oceanus Procellarum':'PADKASKDAg',
-    'Eduardo Castex':'SARACATUNGA'
+    'Copernicus':'Sector donde se encuentra la bandera del primer alunisaje. Es donde se encuentra el primer polideportivo Lunar y el Museo de los primeros allegados',
+    'Kepler':"Zona donde se grabaron las escenas de 'Alein 3', es la zona mas habitable y con mejor vista. Tiene muchos crateres profundos.",
+    'Langrenus':'Se conoce como la zona oscura o zona muerta por su poca actividad, pero es la mas lisa y mas rica en titanita.',
+    'Stevinus':'Simplemente Stevinus, el unico lugar en la luna donde se encontro una cueva profunda, inexplorada todavia, pero vuelve loco a los mas pelotudos con impetu de exploracion',
+    'Oceanus Procellarum':'Zona mas habitada por los humanos y por los androides de andromeda, ya que posee un oceano es la zona mas prospera.',
+    'Eduardo Castex':'La zona del "Dios" o mejor conocido Eduardo "Pampeano" Castex, este representa el culto a las empandas de morcilla en la Luna,es la zona mas prestigiosa(debido al mismo) y la mas fria a su vez.'
 }
 var pterr = {
     'Copernicus':55000,
@@ -126,7 +126,6 @@ function init() {/* Escenea, render, camara, controles, skybox, luna, luces,*/
             window.addEventListener( 'resize', onWindowResize, false );
             window.addEventListener( 'pointerup', tentativecalltodatabase, false );
             console.log(scene.children)
-            config();
             render();
         }
         
@@ -185,10 +184,9 @@ function init() {/* Escenea, render, camara, controles, skybox, luna, luces,*/
             descterr.innerHTML = dterr[selectterrien];
             M.Sidenav.getInstance(cterrside).open();
             compraterr.addEventListener('click', function() {
-                let saldoAnt = saldo.textContent.substr(9, saldo.textContent.length)
-                let saldoInt = parseInt(saldoAnt.slice(0, -1));
-                let saldoAct = saldoInt - precioInt;
-                saldo.innerHTML = 'Tu saldo: ' + saldoAct + '$<i id="saldo-icon" class="fas fa-wallet"></i>';
+                let saldoAnt = saldo.textContent.substr(11, saldo.textContent.length)
+                let saldoAct = saldoInt - saldoAnt;
+                saldo.innerHTML = 'Tu saldo: $' + saldoAct + '<i id="saldo-icon" class="fas fa-wallet"></i>';
                 // unafuncion(saldoAct);
             })
         };
@@ -211,10 +209,9 @@ function init() {/* Escenea, render, camara, controles, skybox, luna, luces,*/
         descterr.innerHTML = dterr[selectterr];
         M.Sidenav.getInstance(cterrside).open();
         compraterr.addEventListener('click', function() {
-            let saldoAnt = saldo.textContent.substr(9, saldo.textContent.length)
-            let saldoInt = parseInt(saldoAnt.slice(0, -1));
-            let saldoAct = saldoInt - precioInt;
-            saldo.innerHTML = 'Tu saldo: ' + saldoAct + '$<i id="saldo-icon" class="fas fa-wallet"></i>';
+            let saldoAnt = saldo.textContent.substr(11, saldo.textContent.length)
+            let saldoAct = saldoInt - saldoAnt;
+            saldo.innerHTML = 'Tu saldo: $' + saldoAct + '<i id="saldo-icon" class="fas fa-wallet"></i>';
             // unafuncion(saldoAct);
         })
     }
@@ -285,10 +282,6 @@ function render() { /* RENDEREAR LA ESCENA*/
     if(grabbing == true){
         screen.style.cursor = 'grabbing'
     }
-    //CSS
-    items[0].style.height = window.innerHeight - height + "px";
-
-    //console.log(scene.children)  
     directLight.position.set(camera.position.x, camera.position.y - 300,camera.position.z - 700)
     camera.updateProjectionMatrix();
     renderer.render( scene, camera );
