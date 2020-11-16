@@ -1,8 +1,6 @@
 <?php
 	session_start();
 
-	require 'database.php';
-
 	if(!isset($_SESSION['usuario']) && !isset($_SESSION['email'])) {
 		header('Location: login.php');
 	}
@@ -44,7 +42,7 @@
 
 						<li>
 							<a href="#">
-								<i class="fas fa-info-circle"></i>
+								<i id="info-link" class="fas fa-info-circle"></i>
 								<span class="link_text">Informacion</span>
 							</a>
 						</li>
@@ -57,6 +55,24 @@
 						</li>
 
 					</ul> 
+				</div>
+			</div>
+
+			<div id="contenido-info" class="hide">
+				<div class="info">
+					<i class="fa fa-times close_info-icon"></i>
+					<div class="row">
+						<i id="info-icon" class="fas fa-info-circle"></i>
+					</div>
+						<div class="row center-align">
+						<h5>Información</h5>
+						<p class="left-align">Bienvendio al manual de usuario de Frederic Moon, el simulador terrenal mas profesional del marcado:</p>
+						<ul>
+							<li class="left-align">Navegar en la luna: para poder indagar en las distintas partes d ela luna, basta con mover la camara con el click izquierdo. Para contemplarla a mayor detalle puede hacer zoom con la ruedita del mouse. Puede cambiar distintas caracteristicas de la camra con las herramientas de escena "Config Camera".</li>
+							<li class="left-align">Para cmabiar la luminocidad tambien puede acceder a este con las herramientas de escnea "Config Light". Otras caracteristicas para darle un poco de ambiente a la escena es "VisibiltyObj" y "CORRUPTION".</li>
+						</ul>
+						<p class="left-align">Para poder comprar terrenos, peude clickear en el boton "Bandera" y darle a "VER" para acceder a las propiedades del terreno y comprarlo.</p>
+					</div>
 				</div>
 			</div>
 
@@ -77,18 +93,11 @@
 							<i id="saldo-icon" class="fas fa-wallet"></i>
 						</a>
 					</li>
-					<!-- <script></script> -->
-					<!-- <li><div class="divider grey darken-3"></div></li>
-					<li class="user-items user-custom">
-						<a class="white-text left-align" href="#"> Cambiar nombre de usuario </a>
-					</li>
-					<li class="user-items user-custom">
-						<a class="white-text left-align" href="#"> Información de cuenta </a>
-					</li>
-				</div> -->
+				</div>
 			</ul>
 
 			<ul class="sidenav grey darken-4" id="cterrenos-side">
+				<i data-target="bterrenos-side" id="back-icon" class="fas fa-arrow-left sidenav-trigger"></i>
 				<li><div id="user-view_terreno" class="user-view">
 					<div id = "backg-terreno" class="background">
 						<img id="foto-terreno" src="" width="533" height="300">
@@ -102,10 +111,25 @@
 					<p id="desc-terreno" class="name white-text left-align"></p>	
 				</li>
 				<li>
+					<span id="propietario" class="grey-text lighter-1"></span>
 					<a id="comprar-terreno" href="#" class="waves-effect waves-light btn light-blue darken-3">Comprar</a>
 				</li>
-			</ul>
-
+				<li>
+					<div class="row hide" id="alert-card">
+						<div class="col s12 m12">
+							<div class="card green darken-1">
+								<div class="row">
+									<div class="col s12 m10">
+										<div class="card-content white-text">
+											<p>Exito al comprar el terreno de mierda</p>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</li>
+				</ul>
+					
 			<ul class="sidenav grey darken-4" id="bterrenos-side">
 				<div class="row">
 					<div class="container center-align">
@@ -134,7 +158,7 @@
 								<span class="card-title">Kepler</span>
 							</div>
 							<div class="card-content">
-								<p class="white-text">Lugar donde se planto al bandera en el primer alunizaje.</p>
+								<p class="white-text">Zona donde se grabaron las escenas de 'Alein 3'.</p>
 							</div>
 							<div class="card-action">
 								<a id="Kepler" data-target="cterrenos-side" class="ver sidenav-trigger light-blue-text darken-3" href="#">VER</a>
@@ -149,7 +173,7 @@
 								<span class="card-title">Langrenus</span>
 							</div>
 							<div class="card-content">
-								<p class="white-text">Lugar donde se planto al bandera en el primer alunizaje.</p>
+								<p class="white-text">Se conoce como la zona oscura o zona muerta.</p>
 							</div>
 							<div class="card-action">
 								<a id="Langrenus" data-target="cterrenos-side" class="ver sidenav-trigger light-blue-text darken-3" href="#">VER</a>
@@ -164,7 +188,7 @@
 								<span class="card-title">Stevinus</span>
 							</div>
 							<div class="card-content">
-								<p class="white-text">Lugar donde se planto al bandera en el primer alunizaje.</p>
+								<p class="white-text">El unico lugar en la luna donde se encontro una cueva profunda.</p>
 							</div>
 							<div class="card-action">
 								<a id="Stevinus" data-target="cterrenos-side" class="ver sidenav-trigger light-blue-text darken-3" href="#">VER</a>
@@ -179,7 +203,7 @@
 								<span class="card-title z-depth-5">Oceanus Procellarum</span>
 							</div>
 							<div class="card-content">
-								<p class="white-text">Lugar donde se planto al bandera en el primer alunizaje.</p>
+								<p class="white-text">Zona mas habitada por los humanos.</p>
 							</div>
 							<div class="card-action">
 								<a id="Oceanus Procellarum" data-target="cterrenos-side" class="ver sidenav-trigger light-blue-text darken-3" href="#">VER</a>
@@ -194,7 +218,7 @@
 								<span class="card-title">Eduardo Castex</span>
 							</div>
 							<div class="card-content">
-								<p class="white-text">Lugar donde se planto al bandera en el primer alunizaje.</p>
+								<p class="white-text">Co-director del proyecto Frederic Moon</p>
 							</div>
 							<div class="card-action">
 								<a id="Eduardo Castex" data-target="cterrenos-side" class="ver sidenav-trigger light-blue-text darken-3" href="#">VER</a>

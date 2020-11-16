@@ -3,6 +3,8 @@ import { OrbitControls } from '../../node_modules/three/examples/jsm/controls/Or
 import { GLTFLoader } from  '../../node_modules/three/examples/jsm/loaders/GLTFLoader.js';
 import { OBJLoader } from  '../../node_modules/three/examples/jsm/loaders/OBJLoader.js';
 import { VertexNormalsHelper } from '../../node_modules/three/examples/jsm/helpers/VertexNormalsHelper.js';
+// import { EqualStencilFunc } from 'three';
+// import { VertexColors } from 'three';
 
 var scene,renderer,camera,loader,loaderobj,directLight,moon,controles,screen = document.getElementById('canvas-luna'),grabbing;
 var cubefaces,cubeMaterial,cubeGeometry,skybox,geocilind,matcilind,cylinder,countrender = 0,geometrypart,verticespart,part,materialpart,particles,randomdirect = [-1,1];
@@ -27,6 +29,18 @@ var pterr = {
     'Oceanus Procellarum':42000,
     'Eduardo Castex':69000
 }
+var eterr = {
+    'Copernicus':true,
+    'Kepler':true,
+    'Langrenus':true,
+    'Stevinus':true,
+    'Oceanus Procellarum':true,
+    'Eduardo Castex':true
+}
+var descripcion = 'Bienvendio al manual de usuario de Frederic Moon, el simulador terrenal mas profesional del marcado: \n Navegar en la luna: para poder indagar en las distintas partes d ela luna, basta con mover la camara con el click izquierdo. Para contemplarla a mayor detalle puede hacer zoom con la ruedita del mouse. Puede cambiar distintas caracteristicas de la camra con las herramientas de escena "Config Camera".\n Para cmabiar la luminocidad tambien puede acceder a este con las herramientas de escnea "Config Light". Otras caracteristicas para darle un poco de ambiente a la escena es "VisibiltyObj" y "CORRUPTION".\nPara poder comprar terrenos, peude clickear en el boton "Bandera" y darle a "VER" para acceder a las propiedades del terreno y comprarlo.'
+
+var selectterrientrue,
+    precioInt;
 
 let spanterr = document.getElementById('nombre-terreno'),
     imgterr = document.getElementById('foto-terreno'),
@@ -35,8 +49,9 @@ let spanterr = document.getElementById('nombre-terreno'),
     cterrside = document.getElementById('cterrenos-side'),
     bterrside = document.getElementById('bterrenos-side'),
     saldo = document.getElementById('saldo'),
-    compraterr = document.getElementById('comprar-terreno');
-    
+    compraterr = document.getElementById('comprar-terreno'),
+    infoicon = document.getElementById('info-link');  
+
 init();
 function init() {/* Escenea, render, camara, controles, skybox, luna, luces,*/
     scene = new THREE.Scene();
@@ -79,68 +94,27 @@ function init() {/* Escenea, render, camara, controles, skybox, luna, luces,*/
             gltf.scene.children[0].name = 'moon'
             scene.add( gltf.scene.children[0] );
         }
-        );
-        loaderobj = new OBJLoader()
-        loaderobj.load(//satelit
-            '../modelos/sat.obj',
-            function ( obj ) {
-                obj.name = 'Satellite-DiscovM39'
-                obj.position.y = 490
-                scene.add( obj );
-                obj.scale.set(16,16,16)
-            }
-            );
-            
-            geometrypart = new THREE.BufferGeometry();
-            verticespart = [];
-            part = new THREE.TextureLoader().load( '../imagenes/disc.png' );
-            
-            for ( let i = 0; i < 725; i ++ ) {
-                const x = Math.floor(Math.random() * 5001) * randomdirect[Math.floor(Math.random() * 2)]
-                const y = Math.floor(Math.random() * 5001) * randomdirect[Math.floor(Math.random() * 2)]
-                const z = Math.floor(Math.random() * 5001) * randomdirect[Math.floor(Math.random() * 2)]
-                verticespart.push( x, y, z );
-                
-            }
-            geometrypart.setAttribute( 'position', new THREE.Float32BufferAttribute( verticespart, 3 ) );
-            materialpart = new THREE.PointsMaterial( { size: 35, sizeAttenuation: true, map: part, alphaTest: 0.5, transparent: true } );
-            materialpart.color.setHSL( 1.0, 0.3, 0.7 );
-            particles = new THREE.Points( geometrypart, materialpart );
-            particles.visible = false;
-            scene.add( particles );
-            
-            //Cylindros = id terreno
-            for(var t = 0; t < nterr.length;t++){
-                const geocilind = new THREE.CylinderGeometry( 22, 0, 1004 , 64 );
-                const matcilind = new THREE.MeshLambertMaterial( {color: 0x2825c9,transparent:true, opacity: 0.75} );
-                const cylinder = new THREE.Mesh( geocilind, matcilind );
-                cylinder.name = 'ter-'.concat(nterr[t]) 
-                cylinder.rotateX(angleX[t])
-                cylinder.rotateZ(angleZ[t])
-                scene.add( cylinder );//
-            }
-            //Listeners utiles para el canvas y el detector de objetos(mouse y raycaster)
-            raycaster = new THREE.Raycaster();
-            mouse = new THREE.Vector2();
-            window.addEventListener( 'mousemove', onDocumentMouseMove, false );
-            window.addEventListener( 'resize', onWindowResize, false );
-            window.addEventListener( 'pointerup', tentativecalltodatabase, false );
-            console.log(scene.children)
-            render();
+    );
+    loaderobj = new OBJLoader()
+    loaderobj.load(//satelit
+        '../modelos/sat.obj',
+        function ( obj ) {
+            obj.name = 'Satellite-DiscovM39'
+            obj.position.y = 490
+            scene.add( obj );
+            obj.scale.set(16,16,16)
         }
+    );
         
-        
-        
-        geometrypart = new THREE.BufferGeometry();
-        verticespart = [];
-        part = new THREE.TextureLoader().load( '../imagenes/disc.png' );
-        
-        for ( let i = 0; i < 725; i ++ ) {
+    geometrypart = new THREE.BufferGeometry();
+    verticespart = [];
+    part = new THREE.TextureLoader().load( '../imagenes/disc.png' );
+            
+    for ( let i = 0; i < 725; i ++ ) {
         const x = Math.floor(Math.random() * 5001) * randomdirect[Math.floor(Math.random() * 2)]
         const y = Math.floor(Math.random() * 5001) * randomdirect[Math.floor(Math.random() * 2)]
         const z = Math.floor(Math.random() * 5001) * randomdirect[Math.floor(Math.random() * 2)]
-        verticespart.push( x, y, z );
-        
+        verticespart.push( x, y, z ); 
     }
     geometrypart.setAttribute( 'position', new THREE.Float32BufferAttribute( verticespart, 3 ) );
     materialpart = new THREE.PointsMaterial( { size: 35, sizeAttenuation: true, map: part, alphaTest: 0.5, transparent: true } );
@@ -148,11 +122,11 @@ function init() {/* Escenea, render, camara, controles, skybox, luna, luces,*/
     particles = new THREE.Points( geometrypart, materialpart );
     particles.visible = false;
     scene.add( particles );
-    
-    //Cylindros = id terreno
+        
+        //Cylindros = id terreno
     for(var t = 0; t < nterr.length;t++){
         const geocilind = new THREE.CylinderGeometry( 22, 0, 1004 , 64 );
-        const matcilind = new THREE.MeshLambertMaterial( {color: 0x2825c9,transparent:true, opacity: 0.75} );
+        const matcilind = new THREE.MeshLambertMaterial( {color: 0x2825c9,transparent:true, opacity: 0.50} );
         const cylinder = new THREE.Mesh( geocilind, matcilind );
         cylinder.name = 'ter-'.concat(nterr[t]) 
         cylinder.rotateX(angleX[t])
@@ -164,58 +138,85 @@ function init() {/* Escenea, render, camara, controles, skybox, luna, luces,*/
     mouse = new THREE.Vector2();
     window.addEventListener( 'mousemove', onDocumentMouseMove, false );
     window.addEventListener( 'resize', onWindowResize, false );
-    window.addEventListener( 'pointerdown', grab, false );
     window.addEventListener( 'pointerup', tentativecalltodatabase, false );
     console.log(scene.children)
     config();
     render();
-    
-    function grab(event){
-        grabbing = true;
-    }
-    
-    function tentativecalltodatabase (event) {
-        grabbing = false;
-        if( selectterrien != null) {
-            let precioInt = pterr[selectterrien];
-            spanterr.innerHTML = selectterrien;
-            imgterr.src = '../imagenes/Terrenos/' + selectterrien + '.jpg';
-            precioterr.innerHTML = '$' + pterr[selectterrien] / 1000 + '.' + '000';
-            descterr.innerHTML = dterr[selectterrien];
-            M.Sidenav.getInstance(cterrside).open();
-            compraterr.addEventListener('click', function() {
-                let saldoAnt = saldo.textContent.substr(11, saldo.textContent.length)
-                let saldoAct = saldoInt - saldoAnt;
-                saldo.innerHTML = 'Tu saldo: $' + saldoAct + '<i id="saldo-icon" class="fas fa-wallet"></i>';
-                // unafuncion(saldoAct);
-            })
-        };
-    }
+}   
 
-    let select = document.querySelectorAll('.ver');
-    for (let i = 0; i < select.length; i++) {
-        select[i].addEventListener("click", function() {
-            M.Sidenav.getInstance(bterrside).close();
-            let selectterr = select[i].id;
-            bterrtriggercterr(selectterr);
-        });
-    }
-        
-    function bterrtriggercterr(selectterr) {
-        let precioInt = pterr[selectterr];
-        spanterr.innerHTML = selectterr;
-        imgterr.src = '../imagenes/Terrenos/' + selectterr + '.jpg';
-        precioterr.innerHTML = '$' + pterr[selectterr] / 1000 + '.' + '000';
-        descterr.innerHTML = dterr[selectterr];
+function grab(event){
+    grabbing = true;
+}
+    
+
+
+function tentativecalltodatabase (event) {
+    grabbing = false;
+    if( selectterrien != null) {
+        selectterrientrue = selectterrien;
+        precioInt = pterr[selectterrientrue];
+        spanterr.innerHTML = selectterrientrue;
+        imgterr.src = '../imagenes/Terrenos/' + selectterrientrue + '.jpg';
+        precioterr.innerHTML = '$' + pterr[selectterrientrue] / 1000 + '.' + '000';
+        descterr.innerHTML = dterr[selectterrientrue];
         M.Sidenav.getInstance(cterrside).open();
-        compraterr.addEventListener('click', function() {
-            let saldoAnt = saldo.textContent.substr(11, saldo.textContent.length)
-            let saldoAct = saldoInt - saldoAnt;
-            saldo.innerHTML = 'Tu saldo: $' + saldoAct + '<i id="saldo-icon" class="fas fa-wallet"></i>';
-            // unafuncion(saldoAct);
-        })
+        if(eterr[selectterrientrue] == true) {
+            document.getElementById('propietario').innerHTML = ""
+            compraterr.classList.remove('disabled');
+        } else {
+            document.getElementById('propietario').innerHTML = ""
+            compraterr.classList += ' disabled';
+        }
+    };
+}
+
+let select = document.querySelectorAll('.ver');
+for (let i = 0; i < select.length; i++) {
+    select[i].addEventListener("click", function() {
+        M.Sidenav.getInstance(bterrside).close();
+        let selectterr = select[i].id;
+        selectterrien = select[i].id;
+        selectterrientrue = select[i].id;
+        bterrtriggercterr(selectterr);
+    });
+}
+
+function bterrtriggercterr(selectterr) {
+    selectterrientrue = selectterr;
+    precioInt = pterr[selectterrientrue];
+    spanterr.innerHTML = selectterrientrue;
+    imgterr.src = '../imagenes/Terrenos/' + selectterrientrue + '.jpg';
+    precioterr.innerHTML = '$' + pterr[selectterrientrue] / 1000 + '.' + '000';
+    descterr.innerHTML = dterr[selectterrientrue];
+    M.Sidenav.getInstance(cterrside).open();
+    if(eterr[selectterrientrue] == true) {
+        document.getElementById('propietario').innerHTML = "";
+        compraterr.classList.remove('disabled');
+    } else {
+        document.getElementById('propietario').innerHTML = "Propietario: Tú";
+        compraterr.classList += ' disabled';
     }
-        
+}
+
+compraterr.addEventListener('click', function() {
+    let saldoAnt = parseInt(saldo.textContent.substr(11, saldo.textContent.length))
+    let saldoAct = saldoAnt - precioInt;
+    console.log(saldoAct);
+    saldo.innerHTML = 'Tu saldo: $' + saldoAct + '<i id="saldo-icon" class="fas fa-wallet"></i>';
+    compraterr.classList += ' disabled';
+    document.getElementById('alert-card').classList.remove('hide');
+    eterr[selectterrientrue] = false;
+    document.getElementById('propietario').innerHTML = "Propietario: Tú"
+    setTimeout(function(){
+        document.getElementById('alert-card').setAttribute('aria-hidden', 'true');
+        document.getElementById('alert-card').classList += ' hide';
+    }, 2000)
+})
+
+infoicon.addEventListener('click', function(){ document.getElementById('contenido-info').classList.remove('hide')})
+document.getElementById('back-icon').addEventListener('click', () => M.Sidenav.getInstance(cterrside).close())
+document.getElementsByClassName('close_info-icon')[0].addEventListener('click', function(){document.getElementById('contenido-info').classList += ' hide'})
+
 function config() {
     const panel = new dat.GUI();
     const camera = panel.addFolder('Config Camera');
@@ -251,7 +252,7 @@ function render() { /* RENDEREAR LA ESCENA*/
     const h = ( 360 * ( 1.0 + time ) % 360 ) / 360;
     materialpart.color.setHSL( h, 0.5, 0.5 );
     countrender += 20//Cambia el color de las particulas
-    if(countrender > 600){
+    if(countrender > 600) {
         camera.far = 100000 
     }//Espera a que se cargue toda la escena
     if(crasheamuniverso == true){
@@ -262,7 +263,7 @@ function render() { /* RENDEREAR LA ESCENA*/
     controles.update()
     for(var g = 0; g < scene.children.length;g++){//Setea la opacidad como no seleciconado(de terrenos) para provenir
         if(scene.children[g].name.substr(0,4) == 'ter-'){
-            scene.children[g].material.opacity = 0.75
+            scene.children[g].material.opacity = 0.50
         }
     }
     /* MAIN */
@@ -327,8 +328,6 @@ function changeCrash(bool){
 function changeFrustrum(factor){
     camera.fov = factor
 }
-
-//CSS
 
 //Sidenav
 document.addEventListener('DOMContentLoaded', function () {

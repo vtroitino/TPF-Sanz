@@ -56,6 +56,7 @@
 </head>
 <body id="login">
     <canvas id="canvas-login"></canvas>
+    
     <div class="login">
         <div class="row">
             <div class="logo"></div>
@@ -71,11 +72,10 @@
                 </div>
             </div>
             <div class="row">
-                <div class="input-field col s12">
+                <div id="contra-fix" class="input-field col s12">
                     <input id="password_input" type="password" name="contraseña" class="validate" required>
                     <label for="password_input">Contraseña</label>
                     <i class="fa fa-eye icon_style" id="toggle"></i>
-                    <a href="#"><b>¿Olvido su contraseña?</b></a>
                 </div>
             </div>
             <?php if (!empty($errormsg)): ?>
