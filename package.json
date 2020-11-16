@@ -1,0 +1,23 @@
+{
+  "name": "tpf-sanz",
+  "version": "1.0.0",
+  "description": "Trabajo practico final. Aplicación web.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vtroitino/TPF-Sanz.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/vtroitino/TPF-Sanz/issues"
+  },
+  "homepage": "https://github.com/vtroitino/TPF-Sanz#readme",
+  "dependencies": {
+    "materialize-css": "^1.0.0-rc.2",
+    "three": "^0.121.1"
+  }
+}
