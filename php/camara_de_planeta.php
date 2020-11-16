@@ -121,7 +121,7 @@
 								<div class="row">
 									<div class="col s12 m10">
 										<div class="card-content white-text">
-											<p>Exito al comprar el terreno de mierda</p>
+											<p>Exito en la compra</p>
 										</div>
 									</div>
 								</div>
